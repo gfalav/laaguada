@@ -1,0 +1,85 @@
+<h1>
+  Estado de las Canchas 
+</h1>
+
+<%= form_tag("/reservas", :method=>'GET', :id=>'form1') do %>
+  Reservas del día <%= text_field_tag('fdia', @fdesde.strftime('%d-%m-%Y'), :class=>'fdiaclass') %>
+<% end %>
+
+<table>
+  <tr>
+    <th>Hora</th>
+    <th>Cancha 1</th>
+    <th>Cancha 2</th>
+    <th>Cancha 3</th>
+    <th>Cancha 4</th>
+    <th>Cancha 5</th>
+    <th>Cancha 6</th>
+  </tr>
+
+<% @reservas.each do |reserva| %>
+  <tr>
+    <td class="hora"><%= reserva['hora'].strftime('%H:%M') %></td>
+
+    <% (1..6).each do |c| %>
+
+      <% if reserva[(c.to_s+'d')] != nil %>
+        <% if reserva[(c.to_s+'d')] > 0 %>
+          <td class="ocupado" rowspan="<%= reserva[(c.to_s+'d')] %>"> <%= link_to reserva[(c.to_s+'p')], "#c"+c.to_s+'h'+reserva['hora'].strftime('%H:%M')+'f'+ @fdesde.strftime('%d-%m-%Y')+'i'+reserva[(c.to_s+'i')].to_s %> </td>
+        <% end %>
+      <% else %>
+        <td class="libre"><%= link_to "libre", "#c"+c.to_s+'h'+reserva['hora'].strftime('%H:%M')+'f'+ @fdesde.strftime('%d-%m-%Y')+'i0' %></td>
+      <% end %>
+
+    <% end%>
+
+  </tr>
+<% end %>
+</table>
+
+<div id="reserva" title="Datos de la Reserva" class="resform">
+  
+  <%= form_tag("/reservas", :method=>'POST') do %>
+    <%= label_tag 'Cancha' %>
+    <%= text_field_tag('cancha','1', :size=>4) %> <br/>
+    <%= label_tag 'Fecha de la reserva' %>
+    <%= text_field_tag('fdesde','22-02-2013', :size=>10) %> <br/>
+    <%= label_tag 'Hora de la reserva' %>
+    <%= text_field_tag('hdesde','13:00', :size=>5) %> <br/>
+    <%= label_tag 'Duración' %>
+    <%= select_tag 'Duracion',"<option>01:00hs</option><option>01:30hs</option><option>02:00hs</option><option>02:30hs</option><option>03:00hs</option><option>03:30hs</option><option>04:00hs</option><option>04:30hs</option><option>05:00hs</option><option>05:30hs</option><option>06:00hs</option><option>06:30hs</option>".html_safe %> <br />
+    <%= label_tag 'Jugadores' %>
+    <%= text_field_tag('Players', '', :size=>30) %> <br />
+    <%= submit_tag('Reservar', :confirm=>'Confirma la Reserva?') %>
+  <% end %>
+
+
+</div>
+
+<script>
+  $(function() {
+    $( "#fdia" ).datepicker({ dateFormat: "dd-mm-yy" } );
+
+    $( "#reserva" ).dialog({
+      width: 400,
+      autoOpen: false,
+      show: {
+        effect: "blind",
+        duration: 1000},
+      hide: {
+        effect: "explode",
+        duration: 1000}
+    });
+
+    $('a').click(function() {
+      $( "#reserva" ).dialog( "open" );
+      $( "#cancha").val(this.attributes[0].nodeValue.substring(2,3));
+      $( "#fdesde").val(this.attributes[0].nodeValue.substring(10,21));
+      $( "#hdesde").val(this.attributes[0].nodeValue.substring(4,9));
+    });
+
+    $('#fdia').change(function() {
+      $("#form1").submit();
+    })
+  });
+</script>

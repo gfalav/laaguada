@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  cancha: 1
+  fdesde: 2013-02-22 09:51:48
+  fhasta: 2013-02-22 09:51:48
+  players: MyString
+
+two:
+  cancha: 1
+  fdesde: 2013-02-22 09:51:48
+  fhasta: 2013-02-22 09:51:48
+  players: MyString
